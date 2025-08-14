@@ -28,9 +28,10 @@ class DimensionalityReducer:
 
     ##### YOUR CODE GOES HERE #####
     def transform(self) -> pd.DataFrame:
-        if self.model is None:
-            raise RuntimeError("Dimensionality reduction model is not initialized")
+        # if self.model is None:
+        #     raise RuntimeError("Dimensionality reduction model is not initialized")
         reduced = self.model.fit_transform(self.data)
         columns = ["component_1", "component_2"][: self.n_components]
-        transformed_df = pd.DataFrame(reduced, index=self.data.index, columns=columns)
+        # transformed_df = pd.DataFrame(reduced, index=self.data.index, columns=columns)
+        transformed_df = pd.DataFrame(reduced, index=self.data.index)
         return transformed_df

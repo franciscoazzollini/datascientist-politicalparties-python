@@ -28,7 +28,7 @@ def scatter_plot(
     splot.set_aspect("equal", "box")
     splot.set_xlabel("1st Component")
     splot.set_ylabel("2nd Component")
-    splot.legend()
+    # splot.legend()
 
 
 def plot_density_estimation_results(
@@ -60,46 +60,64 @@ def plot_density_estimation_results(
 
 def plot_finnish_parties(transformed_data: pd.DataFrame, splot: pyplot.subplot = None):
     """Write a function to plot the following finnish parties on a 2D scatter plot"""
+
     finnish_parties = [
         {"parties": ["SDP", "VAS", "VIHR"], "country": "fin", "color": "r"},
         {"parties": ["KESK", "KD"], "country": "fin", "color": "g"},
         {"parties": ["KOK", "SFP"], "country": "fin", "color": "b"},
         {"parties": ["PS"], "country": "fin", "color": "k"},
     ]
+    ##### YOUR CODE GOES HERE #####
     if splot is None:
         splot = pyplot.subplot()
 
     # Expect the index to include country and party (e.g., MultiIndex or columns). Handle both cases.
-    if isinstance(transformed_data.index, pd.MultiIndex):
-        idx_names = list(transformed_data.index.names)
-        has_country = "country" in idx_names
-        has_party = "party" in idx_names
-    else:
-        has_country = "country" in transformed_data.columns
-        has_party = "party" in transformed_data.columns
 
+    # if isinstance(transformed_data.index, pd.MultiIndex):
+    #     idx_names = list(transformed_data.index.names)
+    #     has_country = "country" in idx_names
+    #     has_party = "party" in idx_names
+    # else:
+    #     has_country = "country" in transformed_data.columns
+    #     has_party = "party" in transformed_data.columns
+
+    # for group in finnish_parties:
+    #     parties = group["parties"]
+    #     country = group["country"]
+    #     color = group["color"]
+
+    #     if isinstance(transformed_data.index, pd.MultiIndex) and has_country and has_party:
+    #         mask = (transformed_data.index.get_level_values("country") == country) & (
+    #             transformed_data.index.get_level_values("party").isin(parties)
+    #         )
+    #         subset = transformed_data.loc[mask]
+    #     elif has_country and has_party:
+    #         subset = transformed_data.query("country == @country and party in @parties")
+    #     else:
+    #         # Alternative: if metadata not present, skip filtering and plot all points
+    #         subset = transformed_data
+
+    #     if not subset.empty:
+    #         scatter_plot(
+    #             subset.drop(columns=[c for c in ["country", "party"] if c in subset.columns]),
+    #             color=color,
+    #             splot=splot,
+    #             label=",".join(parties),
+    #         )
+    #Frank2
     for group in finnish_parties:
         parties = group["parties"]
         country = group["country"]
         color = group["color"]
 
-        if isinstance(transformed_data.index, pd.MultiIndex) and has_country and has_party:
-            mask = (transformed_data.index.get_level_values("country") == country) & (
-                transformed_data.index.get_level_values("party").isin(parties)
-            )
-            subset = transformed_data.loc[mask]
-        elif has_country and has_party:
-            subset = transformed_data.query("country == @country and party in @parties")
-        else:
-            # Alternative: if metadata not present, skip filtering and plot all points
-            subset = transformed_data
-
-        if not subset.empty:
-            scatter_plot(
+        mask = (transformed_data.index.get_level_values("country") == country) & (
+            transformed_data.index.get_level_values("party").isin(parties)
+        )
+        subset = transformed_data.loc[mask]
+        scatter_plot(
                 subset.drop(columns=[c for c in ["country", "party"] if c in subset.columns]),
                 color=color,
                 splot=splot,
                 label=",".join(parties),
             )
-
     pyplot.title("Finnish parties (CHES 2019)")

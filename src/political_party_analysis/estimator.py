@@ -32,17 +32,19 @@ class DensityEstimator:
     def sample_parties(
         self, n_samples: int = 10, random_state: int = 0
     ) -> Tuple[pd.DataFrame, np.ndarray]:
-        if not hasattr(self, "gmm_"):
-            raise RuntimeError("Call fit_distribution() before sampling")
-        rng = np.random.RandomState(random_state)
+        # if not hasattr(self, "gmm_"):
+        #     raise RuntimeError("Call fit_distribution() before sampling")
+        # rng = np.random.RandomState(random_state)
         samples, labels = self.gmm_.sample(n_samples)
         sampled_df = pd.DataFrame(samples, columns=self.data.columns)
         return sampled_df, labels
 
     def invert_to_high_dim(self, low_dim_df: pd.DataFrame) -> pd.DataFrame:
         # Inverse transform back to original feature space if supported by the reducer
-        if hasattr(self.dim_reducer_model, "inverse_transform"):
-            high_dim = self.dim_reducer_model.inverse_transform(low_dim_df.values)
-            return pd.DataFrame(high_dim, columns=self.feature_names)
-        # Alternative: train a regressor per high-dim feature to map from low-dim → high-dim
-        raise NotImplementedError("Dimensionality reducer does not support inverse_transform")
+        # if hasattr(self.dim_reducer_model, "inverse_transform"):
+        #     high_dim = self.dim_reducer_model.inverse_transform(low_dim_df.values)
+        #     return pd.DataFrame(high_dim, columns=self.feature_names)
+        # raise NotImplementedError("Dimensionality reducer does not support inverse_transform")
+
+        high_dim = self.dim_reducer_model.inverse_transform(low_dim_df.values)
+        return pd.DataFrame(high_dim, columns=self.feature_names)
